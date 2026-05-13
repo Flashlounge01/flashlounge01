@@ -60,8 +60,13 @@ app.use('/api/dashboard', require('./src/routes/dashboard'));
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok', service: 'Flash Lounge N Suite API' }));
 
-// 404
-app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
+// Serve frontend static files in production
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Catch-all: serve React app for non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
 
 // Error handler
 app.use((err, req, res, next) => {
