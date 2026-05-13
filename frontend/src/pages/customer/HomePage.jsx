@@ -184,12 +184,12 @@ export default function HomePage() {
               <button
                 key={src}
                 onClick={() => openLightbox(i)}
-                className="snap-start flex-none w-72 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 focus:outline-none group block"
+                className="snap-start flex-none w-72 h-56 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 focus:outline-none group block"
               >
                 <img
                   src={src}
                   alt={`Flash Lounge ${i + 1}`}
-                  className="w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </button>
             ))}
@@ -335,21 +335,20 @@ export default function HomePage() {
             </div>
             <div className="scroll-strip snap-x snap-mandatory">
               {models.map((model) => (
-                <Link key={model.id} to="/voting" className="snap-start flex-none w-52 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block text-center">
-                  <div className="pt-6 px-4 pb-5 flex flex-col items-center">
-                    <div className="w-24 h-24 rounded-full overflow-hidden mb-3 border-2 border-flash-border group-hover:border-flash-yellow/50 transition-colors">
-                      {model.photo_url
-                        ? <img src={getImageUrl(model.photo_url)} alt={model.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
-                        : <div className="w-full h-full bg-flash-border" />
-                      }
-                    </div>
-                    <h3 className="text-white font-bold mb-1 line-clamp-1 w-full">{model.name}</h3>
-                    <div className="flex items-center gap-1 text-flash-yellow text-xs mb-4">
+                <Link key={model.id} to="/voting" className="snap-start flex-none w-52 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block">
+                  {model.photo_url ? (
+                    <img src={getImageUrl(model.photo_url)} alt={model.name} className="w-full h-[280px] object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.style.display = 'none'; }} />
+                  ) : (
+                    <div className="w-full h-[280px] bg-flash-border" />
+                  )}
+                  <div className="p-4 text-center">
+                    <h3 className="text-white font-bold mb-1 line-clamp-1">{model.name}</h3>
+                    <div className="flex items-center justify-center gap-1 text-flash-yellow text-xs mb-3">
                       <FaStar size={10} />
                       <span className="font-bold">{model.vote_count?.toLocaleString()}</span>
                       <span className="text-gray-500">votes</span>
                     </div>
-                    <span className="bg-flash-yellow text-flash-black text-xs font-bold px-4 py-1.5 rounded-lg">Vote Now</span>
+                    <span className="inline-block bg-flash-yellow text-flash-black text-xs font-bold px-4 py-1.5 rounded-lg">Vote Now</span>
                   </div>
                 </Link>
               ))}
