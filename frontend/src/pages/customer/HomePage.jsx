@@ -259,6 +259,9 @@ export default function HomePage() {
             <h2 className="section-title mb-2">Flash Suites &amp; Lodging</h2>
             <p className="text-flash-muted italic text-lg mb-4">Stay the Flash Way</p>
             <div className="yellow-divider mx-auto mb-6" />
+            <p className="text-gray-300 text-base leading-relaxed max-w-2xl mx-auto mb-8">
+              Experience luxury at its finest. Our fully air-conditioned suites offer premium comfort with 24/7 power supply, hot water, high-speed WiFi, and exclusive access to the Flash Beach House pool and lounge. Whether you're staying for a night or a weekend, Flash Suites delivers an unforgettable experience — right in the heart of Port Harcourt.
+            </p>
             <Link to="/reserve" className="btn-primary">
               Book a Suite <FaArrowRight />
             </Link>
