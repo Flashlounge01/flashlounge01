@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { FaTimes } from 'react-icons/fa';
 import CustomerLayout from '../../components/layout/CustomerLayout';
 import api, { getImageUrl } from '../../utils/api';
 
@@ -7,6 +8,7 @@ export default function MenuPage() {
   const [categories, setCategories] = useState([]);
   const [active, setActive] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
     Promise.all([api.get('/menu'), api.get('/menu/categories')])
@@ -64,7 +66,7 @@ export default function MenuPage() {
               {filtered.map((item) => (
                 <div key={item.id} className="card p-0 overflow-hidden hover:border-flash-yellow/30 transition-all group">
                   {item.photo_url ? (
-                    <div className="h-44 overflow-hidden">
+                    <div className="h-44 overflow-hidden cursor-zoom-in" onClick={() => setLightbox({ src: getImageUrl(item.photo_url), name: item.name })}>
                       <img src={getImageUrl(item.photo_url)} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                   ) : (
@@ -84,6 +86,27 @@ export default function MenuPage() {
           )}
         </div>
       </div>
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            className="absolute top-5 right-5 text-white hover:text-flash-yellow transition-colors p-2"
+            onClick={() => setLightbox(null)}
+            aria-label="Close"
+          >
+            <FaTimes size={24} />
+          </button>
+          <img
+            src={lightbox.src}
+            alt={lightbox.name}
+            className="max-h-[80vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <p className="mt-4 text-white font-semibold text-lg">{lightbox.name}</p>
+        </div>
+      )}
     </CustomerLayout>
   );
 }
