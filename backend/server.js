@@ -15,9 +15,12 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 // CORS
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:5173',
+  'https://flashlounge.org',
+  'https://www.flashlounge.org',
   'https://flashlounge.up.railway.app',
+  'http://localhost:5173',
   'http://localhost:3000',
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
 ];
 app.use(cors({
   origin: (origin, callback) => {
