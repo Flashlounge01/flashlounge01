@@ -11,7 +11,15 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Security headers
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'img-src': ["'self'", 'data:', 'https://res.cloudinary.com'],
+    },
+  },
+}));
 
 // CORS
 const allowedOrigins = [
