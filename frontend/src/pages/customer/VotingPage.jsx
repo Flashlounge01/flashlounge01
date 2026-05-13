@@ -9,6 +9,7 @@ export default function VotingPage() {
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [voteModal, setVoteModal] = useState(null);
+  const [lightboxModel, setLightboxModel] = useState(null);
   const [form, setForm] = useState({ voter_name: '', voter_phone: '', voter_email: '' });
   const [submitting, setSubmitting] = useState(false);
   const [searchParams] = useSearchParams();
@@ -93,54 +94,52 @@ export default function VotingPage() {
                 return (
                   <div
                     key={model.id}
-                    className={`card relative overflow-hidden hover:border-flash-yellow/50 transition-all group ${idx === 0 ? 'border-flash-yellow/50' : ''}`}
+                    className={`bg-flash-card border border-flash-border rounded-xl relative overflow-hidden hover:border-flash-yellow/50 transition-all group ${idx === 0 ? 'border-flash-yellow/50' : ''}`}
                   >
                     {/* Rank badge */}
                     {idx < 3 && (
-                      <div className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
+                      <div className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
                         ${idx === 0 ? 'bg-yellow-500 text-black' : idx === 1 ? 'bg-gray-400 text-black' : 'bg-yellow-800 text-white'}`}>
                         {idx === 0 ? <FaTrophy size={14} /> : `#${idx + 1}`}
                       </div>
                     )}
 
-                    {/* Photo */}
-                    <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-4 border-3 border-flash-yellow/30 group-hover:border-flash-yellow/60 transition-colors">
+                    {/* Full photo */}
+                    <div
+                      className="w-full h-[350px] overflow-hidden cursor-zoom-in"
+                      onClick={() => model.photo_url && setLightboxModel(model)}
+                    >
                       {model.photo_url
-                        ? <img src={getImageUrl(model.photo_url)} alt={model.name} className="w-full h-full object-cover" />
-                        : <div className="w-full h-full bg-flash-border flex items-center justify-center text-4xl">👤</div>
+                        ? <img src={getImageUrl(model.photo_url)} alt={model.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.style.display = 'none'; }} />
+                        : <div className="w-full h-full bg-flash-border flex items-center justify-center text-5xl">👤</div>
                       }
                     </div>
 
-                    {/* Info */}
-                    <h3 className="text-white font-bold text-xl text-center mb-1">{model.name}</h3>
+                    {/* Content */}
+                    <div className="p-5">
+                      <h3 className="text-white font-bold text-xl text-center mb-1">{model.name}</h3>
 
-                    {/* Vote count */}
-                    <div className="flex items-center justify-center gap-2 mb-3">
-                      <FaStar className="text-flash-yellow" />
-                      <span className="text-flash-yellow font-bold text-2xl">{Number(model.vote_count).toLocaleString()}</span>
-                      <span className="text-gray-500 text-sm">votes</span>
+                      <div className="flex items-center justify-center gap-2 mb-3">
+                        <FaStar className="text-flash-yellow" />
+                        <span className="text-flash-yellow font-bold text-2xl">{Number(model.vote_count).toLocaleString()}</span>
+                        <span className="text-gray-500 text-sm">votes</span>
+                      </div>
+
+                      <div className="bg-flash-border rounded-full h-2 mb-4 overflow-hidden">
+                        <div className="bg-flash-yellow h-full rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                      </div>
+
+                      <p className="text-center text-xs text-gray-400 mb-4">
+                        ₦{Number(model.vote_price).toLocaleString()} per vote
+                      </p>
+
+                      <button
+                        onClick={() => { setVoteModal(model); setForm({ voter_name: '', voter_phone: '', voter_email: '' }); }}
+                        className="w-full btn-primary justify-center"
+                      >
+                        <FaStar size={14} /> Vote for {model.name.split(' ')[0]}
+                      </button>
                     </div>
-
-                    {/* Progress bar */}
-                    <div className="bg-flash-border rounded-full h-2 mb-4 overflow-hidden">
-                      <div
-                        className="bg-flash-yellow h-full rounded-full transition-all duration-500"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-
-                    {/* Vote price */}
-                    <p className="text-center text-xs text-gray-400 mb-4">
-                      ₦{Number(model.vote_price).toLocaleString()} per vote
-                    </p>
-
-                    {/* Vote button */}
-                    <button
-                      onClick={() => { setVoteModal(model); setForm({ voter_name: '', voter_phone: '', voter_email: '' }); }}
-                      className="w-full btn-primary justify-center"
-                    >
-                      <FaStar size={14} /> Vote for {model.name.split(' ')[0]}
-                    </button>
                   </div>
                 );
               })}
@@ -148,6 +147,27 @@ export default function VotingPage() {
           )}
         </div>
       </div>
+
+      {/* Photo Lightbox */}
+      {lightboxModel && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setLightboxModel(null)}
+        >
+          <button
+            className="absolute top-4 right-4 w-10 h-10 bg-flash-black/70 text-white rounded-full flex items-center justify-center hover:bg-flash-yellow hover:text-flash-black transition-colors"
+            onClick={() => setLightboxModel(null)}
+          >
+            <FaTimes size={16} />
+          </button>
+          <img
+            src={getImageUrl(lightboxModel.photo_url)}
+            alt={lightboxModel.name}
+            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
 
       {/* Vote Modal */}
       {voteModal && (
