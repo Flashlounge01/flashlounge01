@@ -23,7 +23,7 @@ const getDashboardStats = async (req, res) => {
       top_models: models.rows,
     });
   } catch (err) {
-    console.error(err);
+    console.error('getDashboardStats error:', err.message, '\n', err.stack);
     res.status(500).json({ error: 'Server error' });
   }
 };

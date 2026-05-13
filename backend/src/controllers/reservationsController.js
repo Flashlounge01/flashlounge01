@@ -18,6 +18,7 @@ const createReservation = async (req, res) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       [customer_name, customer_phone, customer_email || null, reservation_date, reservation_time, parseInt(guests_count), special_requests || null]
     );
+    console.log(`New reservation: ${customer_name}, ${reservation_date} ${reservation_time}, ${guests_count} guests`);
     res.status(201).json({ message: 'Reservation submitted successfully!', reservation: result.rows[0] });
   } catch (err) {
     console.error('createReservation error:', err.message, '\n', err.stack);

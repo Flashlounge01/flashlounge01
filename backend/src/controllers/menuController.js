@@ -53,9 +53,10 @@ const createMenuItem = async (req, res) => {
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
       [name, description, parseFloat(price), category, photoUrl]
     );
+    console.log(`Menu item created: ${name}`);
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('createMenuItem error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -81,9 +82,10 @@ const updateMenuItem = async (req, res) => {
         id,
       ]
     );
+    console.log(`Menu item updated: ${id}`);
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('updateMenuItem error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -93,8 +95,10 @@ const deleteMenuItem = async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM menu_items WHERE id=$1 RETURNING id', [id]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Item not found' });
+    console.log(`Menu item deleted: ${id}`);
     res.json({ message: 'Item deleted' });
   } catch (err) {
+    console.error('deleteMenuItem error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };

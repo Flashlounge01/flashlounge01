@@ -37,9 +37,10 @@ const uploadPhoto = async (req, res) => {
       'INSERT INTO gallery_photos (photo_url, caption, category) VALUES ($1, $2, $3) RETURNING *',
       [photoUrl, caption || '', category || 'general']
     );
+    console.log(`Gallery photo uploaded: ${photoUrl}`);
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('uploadPhoto error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -49,8 +50,10 @@ const deletePhoto = async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM gallery_photos WHERE id=$1 RETURNING id', [id]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Photo not found' });
+    console.log(`Gallery photo deleted: ${id}`);
     res.json({ message: 'Photo deleted' });
   } catch (err) {
+    console.error('deletePhoto error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };

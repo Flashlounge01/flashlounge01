@@ -164,8 +164,10 @@ const createModel = async (req, res) => {
       'INSERT INTO models (name, photo_url, vote_price) VALUES ($1, $2, $3) RETURNING *',
       [name, photoUrl, parseFloat(vote_price)]
     );
+    console.log(`Model created: ${name}`);
     res.status(201).json(result.rows[0]);
   } catch (err) {
+    console.error('createModel error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -182,8 +184,10 @@ const updateModel = async (req, res) => {
       `UPDATE models SET name=$1, photo_url=$2, vote_price=$3, is_active=$4, updated_at=NOW() WHERE id=$5 RETURNING *`,
       [name || m.name, photoUrl, vote_price ? parseFloat(vote_price) : m.vote_price, is_active !== undefined ? is_active : m.is_active, id]
     );
+    console.log(`Model updated: ${id}`);
     res.json(result.rows[0]);
   } catch (err) {
+    console.error('updateModel error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -193,8 +197,10 @@ const deleteModel = async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM models WHERE id=$1 RETURNING id', [id]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Model not found' });
+    console.log(`Model deleted: ${id}`);
     res.json({ message: 'Model deleted' });
   } catch (err) {
+    console.error('deleteModel error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };

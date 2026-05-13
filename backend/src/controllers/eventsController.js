@@ -35,9 +35,10 @@ const createEvent = async (req, res) => {
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
       [title, description, event_date, event_time, photoUrl]
     );
+    console.log(`Event created: ${title} on ${event_date}`);
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('createEvent error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -55,9 +56,10 @@ const updateEvent = async (req, res) => {
        WHERE id=$7 RETURNING *`,
       [title || e.title, description ?? e.description, event_date || e.event_date, event_time || e.event_time, photoUrl, is_active !== undefined ? is_active : e.is_active, id]
     );
+    console.log(`Event updated: ${id}`);
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('updateEvent error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -67,8 +69,10 @@ const deleteEvent = async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM events WHERE id=$1 RETURNING id', [id]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'Event not found' });
+    console.log(`Event deleted: ${id}`);
     res.json({ message: 'Event deleted' });
   } catch (err) {
+    console.error('deleteEvent error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
