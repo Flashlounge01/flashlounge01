@@ -94,7 +94,7 @@ export default function EventsPage() {
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-flash-card border border-flash-border rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+            className="relative bg-flash-card border border-flash-border rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}

@@ -262,7 +262,7 @@ export default function HomePage() {
             <p className="text-gray-300 text-base leading-relaxed max-w-2xl mx-auto mb-8">
               Experience luxury at its finest. Our fully air-conditioned suites offer premium comfort with 24/7 power supply, hot water, high-speed WiFi, and exclusive access to the Flash Beach House pool and lounge. Whether you're staying for a night or a weekend, Flash Suites delivers an unforgettable experience — right in the heart of Port Harcourt.
             </p>
-            <Link to="/reserve" className="btn-primary">
+            <Link to="/reserve" className="btn-primary w-full sm:w-auto justify-center">
               Book a Suite <FaArrowRight />
             </Link>
           </div>
@@ -300,10 +300,10 @@ export default function HomePage() {
 
       {/* ─── MENU STRIP ─── */}
       {menuItems.length > 0 && (
-        <section className="py-20 px-4 bg-flash-dark">
+        <section className="py-16 px-4 bg-flash-dark">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-              <div>
+            <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-8 gap-3">
+              <div className="text-center sm:text-left">
                 <p className="section-subtitle mb-2">Our Specialties</p>
                 <h2 className="section-title">Featured Menu</h2>
               </div>
@@ -332,10 +332,10 @@ export default function HomePage() {
 
       {/* ─── EVENTS STRIP ─── */}
       {events.length > 0 && (
-        <section className="py-20 px-4">
+        <section className="py-16 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-              <div>
+            <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-8 gap-3">
+              <div className="text-center sm:text-left">
                 <p className="section-subtitle mb-2">What's Coming</p>
                 <h2 className="section-title">Upcoming Events</h2>
               </div>
@@ -369,10 +369,10 @@ export default function HomePage() {
 
       {/* ─── MODELS STRIP ─── */}
       {models.length > 0 && (
-        <section className="py-20 px-4 bg-flash-dark">
+        <section className="py-16 px-4 bg-flash-dark">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-              <div>
+            <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-8 gap-3">
+              <div className="text-center sm:text-left">
                 <p className="section-subtitle mb-2">Live Competition</p>
                 <h2 className="section-title">Model Voting</h2>
               </div>

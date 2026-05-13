@@ -62,27 +62,25 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden bg-flash-dark border-t border-flash-border">
-          <div className="px-4 pt-2 pb-4 space-y-1">
-            {navLinks.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`block px-4 py-3 rounded-lg font-medium transition-colors ${
-                  location.pathname === to ? 'text-flash-yellow bg-flash-card' : 'text-gray-300 hover:text-flash-yellow hover:bg-flash-card'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-            <Link to="/reserve" className="block btn-primary text-center mt-3">
-              Book a Table
+      {/* Mobile menu — animated with max-height transition */}
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${open ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="bg-flash-dark border-t border-flash-border px-4 pt-3 pb-5 space-y-1">
+          {navLinks.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`block px-4 py-3.5 rounded-lg font-medium transition-colors text-base ${
+                location.pathname === to ? 'text-flash-yellow bg-flash-card' : 'text-gray-300 hover:text-flash-yellow hover:bg-flash-card'
+              }`}
+            >
+              {label}
             </Link>
-          </div>
+          ))}
+          <Link to="/reserve" className="btn-primary w-full justify-center mt-3">
+            Book a Table
+          </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

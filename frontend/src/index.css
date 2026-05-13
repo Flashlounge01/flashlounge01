@@ -149,3 +149,33 @@
 .link-hover:hover::after {
   width: 100%;
 }
+
+/* ══════════════════════════════════════════════
+   MOBILE — max-width 768px
+   ══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Prevent horizontal overflow site-wide */
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Scroll strip cards: 76vw each so the next card always peeks */
+  .scroll-strip > * {
+    min-width: 76vw !important;
+    max-width: 76vw !important;
+    width: 76vw !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Section titles slightly smaller on mobile */
+  .section-title {
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
+
+  /* Full-width primary button on mobile */
+  .btn-primary-mobile {
+    width: 100%;
+    justify-content: center;
+  }
+}

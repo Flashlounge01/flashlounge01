@@ -62,11 +62,11 @@ export default function MenuPage() {
           ) : filtered.length === 0 ? (
             <div className="text-center py-20 text-gray-500">No items in this category yet.</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filtered.map((item) => (
                 <div key={item.id} className="card p-0 overflow-hidden hover:border-flash-yellow/30 transition-all group">
                   {item.photo_url ? (
-                    <div className="h-44 overflow-hidden cursor-zoom-in" onClick={() => setLightbox({ src: getImageUrl(item.photo_url), name: item.name })}>
+                    <div className="h-52 sm:h-44 overflow-hidden cursor-zoom-in" onClick={() => setLightbox({ src: getImageUrl(item.photo_url), name: item.name })}>
                       <img src={getImageUrl(item.photo_url)} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                   ) : (

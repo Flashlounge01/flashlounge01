@@ -106,7 +106,7 @@ export default function VotingPage() {
 
                     {/* Full photo */}
                     <div
-                      className="w-full h-[350px] overflow-hidden cursor-zoom-in"
+                      className="w-full h-[320px] sm:h-[350px] overflow-hidden cursor-zoom-in"
                       onClick={() => model.photo_url && setLightboxModel(model)}
                     >
                       {model.photo_url

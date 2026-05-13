@@ -77,7 +77,7 @@ export default function ReservationPage() {
             <p className="text-gray-400 max-w-xl mx-auto">Book your table at Flash Lounge N Suite and secure your spot for an unforgettable experience.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Form */}
             <div className="lg:col-span-2">
               <div className="card">
