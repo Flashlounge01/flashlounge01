@@ -304,12 +304,9 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {events.map((event) => (
-                <div key={event.id} className="card hover:border-flash-yellow/30 transition-all group overflow-hidden p-0">
+                <Link key={event.id} to="/events" className="card hover:border-flash-yellow/30 transition-all group overflow-hidden p-0 block">
                   {event.photo_url ? (
-                    <div className="h-44 overflow-hidden relative">
-                      <img src={getImageUrl(event.photo_url)} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-flash-black/80 to-transparent" />
-                    </div>
+                    <img src={getImageUrl(event.photo_url)} alt={event.title} className="w-full object-contain bg-flash-dark" onError={(e) => { e.target.style.display = 'none'; }} />
                   ) : (
                     <div className="h-44 bg-flash-border flex items-center justify-center">
                       <FaCalendar className="text-flash-yellow text-4xl opacity-30" />
@@ -323,7 +320,7 @@ export default function HomePage() {
                     <h3 className="text-white font-bold text-lg mb-2">{event.title}</h3>
                     {event.description && <p className="text-gray-400 text-sm line-clamp-2">{event.description}</p>}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
