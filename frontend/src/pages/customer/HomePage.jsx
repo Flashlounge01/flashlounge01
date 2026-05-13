@@ -179,17 +179,17 @@ export default function HomePage() {
             <div className="yellow-divider mx-auto" />
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-4" style={{ scrollbarColor: '#F5C518 #1A1A1A', scrollbarWidth: 'thin' }}>
+          <div className="scroll-strip snap-x snap-mandatory">
             {STRIP_IMAGES.map((src, i) => (
               <button
                 key={src}
                 onClick={() => openLightbox(i)}
-                className="flex-none w-72 h-52 rounded-xl overflow-hidden bg-flash-card focus:outline-none focus:ring-2 focus:ring-flash-yellow group flex items-center justify-center"
+                className="snap-start flex-none w-72 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 focus:outline-none group block"
               >
                 <img
                   src={src}
                   alt={`Flash Lounge ${i + 1}`}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  className="w-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
               </button>
             ))}
