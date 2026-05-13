@@ -77,7 +77,16 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: message });
 });
 
+const initDb = require('./src/db/init');
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Flash Lounge API running on port ${PORT}`));
+initDb()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Flash Lounge API running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database, shutting down:', err);
+    process.exit(1);
+  });
 
 module.exports = app;

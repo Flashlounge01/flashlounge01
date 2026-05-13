@@ -20,8 +20,8 @@ const createReservation = async (req, res) => {
     );
     res.status(201).json({ message: 'Reservation submitted successfully!', reservation: result.rows[0] });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('createReservation error:', err.message, '\n', err.stack);
+    res.status(500).json({ error: process.env.NODE_ENV === 'production' ? 'Server error' : err.message });
   }
 };
 
@@ -37,6 +37,7 @@ const getAllReservations = async (req, res) => {
     const result = await pool.query(query, params);
     res.json(result.rows);
   } catch (err) {
+    console.error('getAllReservations error:', err.message, '\n', err.stack);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -56,6 +57,7 @@ const updateReservationStatus = async (req, res) => {
     if (result.rows.length === 0) return res.status(404).json({ error: 'Reservation not found' });
     res.json(result.rows[0]);
   } catch (err) {
+    console.error('updateReservationStatus error:', err.message, '\n', err.stack);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -67,6 +69,7 @@ const deleteReservation = async (req, res) => {
     if (result.rows.length === 0) return res.status(404).json({ error: 'Reservation not found' });
     res.json({ message: 'Reservation deleted' });
   } catch (err) {
+    console.error('deleteReservation error:', err.message, '\n', err.stack);
     res.status(500).json({ error: 'Server error' });
   }
 };
