@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { uploadSingle } = require('../middleware/upload');
 const {
   getActiveModels, initiateVote, handlePaymentWebhook, verifyPayment,
-  getAllModels, createModel, updateModel, deleteModel, getModelVotes, resetModelVotes
+  getAllModels, createModel, updateModel, deleteModel, getModelVotes, resetModelVotes,
 } = require('../controllers/modelsController');
 
 // Public
@@ -17,8 +17,8 @@ router.post('/webhook', express.raw({ type: 'application/json' }), handlePayment
 
 // Admin
 router.get('/admin/all', authenticateToken, getAllModels);
-router.post('/', authenticateToken, (req, res, next) => { req.uploadSubDir = 'models'; next(); }, upload.single('photo'), createModel);
-router.put('/:id', authenticateToken, (req, res, next) => { req.uploadSubDir = 'models'; next(); }, upload.single('photo'), updateModel);
+router.post('/', authenticateToken, uploadSingle('photo'), createModel);
+router.put('/:id', authenticateToken, uploadSingle('photo'), updateModel);
 router.delete('/:id', authenticateToken, deleteModel);
 router.get('/:id/votes', authenticateToken, getModelVotes);
 router.post('/:id/reset', authenticateToken, resetModelVotes);

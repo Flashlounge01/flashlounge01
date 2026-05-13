@@ -71,13 +71,12 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-// Error handler
+// Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('[Error]', err.message, '\n', err.stack);
   if (err.message === 'Not allowed by CORS') return res.status(403).json({ error: 'CORS policy violation' });
-  // Never expose stack traces or internal messages to clients in production
-  const message = process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message || 'Internal server error';
-  res.status(500).json({ error: message });
+  if (err.type === 'entity.too.large') return res.status(413).json({ error: 'Request body too large' });
+  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
 const initDb = require('./src/db/init');

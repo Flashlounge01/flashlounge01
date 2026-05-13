@@ -10,26 +10,12 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: async (req, file) => ({
-    folder: `flashlounge/${req.uploadSubDir || 'general'}`,
+  params: {
+    folder: 'flashlounge',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-    transformation: [{ quality: 'auto', fetch_format: 'auto' }],
-  }),
+  },
 });
 
-const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
-
-const fileFilter = (req, file, cb) => {
-  if (!ALLOWED_MIME_TYPES.has(file.mimetype)) {
-    return cb(new Error('Only jpg, jpeg, png, and webp images are allowed'));
-  }
-  cb(null, true);
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 },
-});
+const upload = multer({ storage });
 
 module.exports = { cloudinary, upload };
