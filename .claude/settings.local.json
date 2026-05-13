@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx vite:*)",
+      "Bash(node_modules/.bin/vite build:*)",
+      "Bash(node server.js)",
+      "Bash(curl -s http://localhost:5000/health)",
+      "Bash(node_modules/.bin/vite --host)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(netstat *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

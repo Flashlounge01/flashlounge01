@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-flash-black text-white font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-flash-dark;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-flash-yellow rounded-full;
+  }
+
+  ::selection {
+    background-color: rgba(245, 197, 24, 0.3);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-flash-yellow text-flash-black font-bold px-6 py-3 rounded-lg hover:bg-yellow-400 transition-all duration-200 transform hover:scale-105 active:scale-95 inline-flex items-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply border border-flash-yellow text-flash-yellow font-semibold px-6 py-3 rounded-lg hover:bg-flash-yellow hover:text-flash-black transition-all duration-200 inline-flex items-center gap-2;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-flash-card border border-flash-border rounded-xl p-6;
+  }
+
+  .input-field {
+    @apply w-full bg-flash-dark border border-flash-border text-white placeholder-flash-muted rounded-lg px-4 py-3 focus:outline-none focus:border-flash-yellow focus:ring-1 focus:ring-flash-yellow transition-colors;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-300 mb-1;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-display font-bold text-white;
+  }
+
+  .section-subtitle {
+    @apply text-flash-yellow uppercase tracking-widest text-sm font-semibold;
+  }
+
+  .yellow-divider {
+    @apply w-16 h-1 bg-flash-yellow rounded-full;
+  }
+
+  .admin-sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:text-flash-yellow hover:bg-flash-border transition-all duration-200 font-medium;
+  }
+
+  .admin-sidebar-link.active {
+    @apply text-flash-yellow bg-flash-border;
+  }
+
+  .stat-card {
+    @apply bg-flash-card border border-flash-border rounded-xl p-5 flex items-center gap-4;
+  }
+
+  .badge-pending {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300;
+  }
+
+  .badge-confirmed {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-300;
+  }
+
+  .badge-completed {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-300;
+  }
+
+  .badge-cancelled {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900 text-red-300;
+  }
+}
+
+/* Glowing yellow text */
+.text-glow {
+  text-shadow: 0 0 20px rgba(245, 197, 24, 0.5);
+}
+
+/* Hero gradient overlay */
+.hero-overlay {
+  background: linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.7) 60%, rgba(10,10,10,1) 100%);
+}
+
+/* Yellow border glow effect */
+.border-glow {
+  box-shadow: 0 0 15px rgba(245, 197, 24, 0.3);
+}
+
+/* Animated underline */
+.link-hover {
+  position: relative;
+}
+
+.link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #F5C518;
+  transition: width 0.3s ease;
+}
+
+.link-hover:hover::after {
+  width: 100%;
+}

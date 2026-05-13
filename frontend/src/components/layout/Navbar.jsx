@@ -1,0 +1,88 @@
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa';
+
+const navLinks = [
+  { to: '/', label: 'Home' },
+  { to: '/menu', label: 'Menu' },
+  { to: '/events', label: 'Events' },
+  { to: '/gallery', label: 'Gallery' },
+  { to: '/voting', label: 'Vote' },
+  { to: '/reserve', label: 'Reserve' },
+];
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => setOpen(false), [location]);
+
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-flash-black/90 backdrop-blur-md border-b border-flash-border/50' : 'bg-transparent'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center group">
+            <img src="/logo.png" alt="Flash Lounge" className="h-14 w-auto" />
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 link-hover ${
+                  location.pathname === to
+                    ? 'text-flash-yellow'
+                    : 'text-gray-300 hover:text-flash-yellow'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Reserve CTA */}
+          <Link to="/reserve" className="hidden md:block btn-primary text-sm py-2">
+            Book a Table
+          </Link>
+
+          {/* Mobile menu toggle */}
+          <button onClick={() => setOpen(!open)} className="md:hidden text-gray-300 hover:text-flash-yellow p-2">
+            {open ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {open && (
+        <div className="md:hidden bg-flash-dark border-t border-flash-border">
+          <div className="px-4 pt-2 pb-4 space-y-1">
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`block px-4 py-3 rounded-lg font-medium transition-colors ${
+                  location.pathname === to ? 'text-flash-yellow bg-flash-card' : 'text-gray-300 hover:text-flash-yellow hover:bg-flash-card'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+            <Link to="/reserve" className="block btn-primary text-center mt-3">
+              Book a Table
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
