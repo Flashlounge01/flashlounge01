@@ -115,6 +115,21 @@
   box-shadow: 0 0 15px rgba(245, 197, 24, 0.3);
 }
 
+/* Horizontal scroll strip — hides scrollbar, enables snap */
+.scroll-strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0.5rem;
+}
+
+.scroll-strip::-webkit-scrollbar {
+  display: none;
+}
+
 /* Animated underline */
 .link-hover {
   position: relative;

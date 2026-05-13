@@ -251,11 +251,11 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ─── MENU PREVIEW ─── */}
+      {/* ─── MENU STRIP ─── */}
       {menuItems.length > 0 && (
         <section className="py-20 px-4 bg-flash-dark">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
               <div>
                 <p className="section-subtitle mb-2">Our Specialties</p>
                 <h2 className="section-title">Featured Menu</h2>
@@ -264,61 +264,17 @@ export default function HomePage() {
                 Full Menu <FaArrowRight size={12} />
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="scroll-strip snap-x snap-mandatory">
               {menuItems.map((item) => (
-                <div key={item.id} className="card hover:border-flash-yellow/30 transition-all group overflow-hidden p-0">
-                  {item.photo_url && (
-                    <div className="h-44 overflow-hidden">
-                      <img src={getImageUrl(item.photo_url)} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </div>
-                  )}
-                  <div className="p-5">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-white font-semibold">{item.name}</h3>
-                        <span className="text-xs text-flash-muted uppercase tracking-wider">{item.category}</span>
-                      </div>
-                      <span className="text-flash-yellow font-bold text-lg">₦{Number(item.price).toLocaleString()}</span>
-                    </div>
-                    {item.description && <p className="text-gray-400 text-sm mt-2 line-clamp-2">{item.description}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ─── EVENTS PREVIEW ─── */}
-      {events.length > 0 && (
-        <section className="py-20 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
-              <div>
-                <p className="section-subtitle mb-2">What's Coming</p>
-                <h2 className="section-title">Upcoming Events</h2>
-              </div>
-              <Link to="/events" className="btn-secondary text-sm">
-                All Events <FaArrowRight size={12} />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {events.map((event) => (
-                <Link key={event.id} to="/events" className="card hover:border-flash-yellow/30 transition-all group overflow-hidden p-0 block">
-                  {event.photo_url ? (
-                    <img src={getImageUrl(event.photo_url)} alt={event.title} className="w-full object-contain bg-flash-dark" onError={(e) => { e.target.style.display = 'none'; }} />
+                <Link key={item.id} to="/menu" className="snap-start flex-none w-56 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block">
+                  {item.photo_url ? (
+                    <img src={getImageUrl(item.photo_url)} alt={item.name} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.style.display = 'none'; }} />
                   ) : (
-                    <div className="h-44 bg-flash-border flex items-center justify-center">
-                      <FaCalendar className="text-flash-yellow text-4xl opacity-30" />
-                    </div>
+                    <div className="h-40 bg-flash-border" />
                   )}
-                  <div className="p-5">
-                    <div className="inline-flex items-center gap-2 text-xs text-flash-yellow bg-flash-yellow/10 px-2.5 py-1 rounded-full mb-3">
-                      <FaCalendar size={10} />
-                      {format(new Date(event.event_date), 'MMM d, yyyy')} • {event.event_time.slice(0, 5)}
-                    </div>
-                    <h3 className="text-white font-bold text-lg mb-2">{event.title}</h3>
-                    {event.description && <p className="text-gray-400 text-sm line-clamp-2">{event.description}</p>}
+                  <div className="p-4">
+                    <h3 className="text-white font-semibold text-sm line-clamp-1">{item.name}</h3>
+                    <p className="text-flash-yellow font-bold mt-1">₦{Number(item.price).toLocaleString()}</p>
                   </div>
                 </Link>
               ))}
@@ -327,44 +283,76 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ─── VOTING TEASER ─── */}
+      {/* ─── EVENTS STRIP ─── */}
+      {events.length > 0 && (
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+              <div>
+                <p className="section-subtitle mb-2">What's Coming</p>
+                <h2 className="section-title">Upcoming Events</h2>
+              </div>
+              <Link to="/events" className="btn-secondary text-sm">
+                All Events <FaArrowRight size={12} />
+              </Link>
+            </div>
+            <div className="scroll-strip snap-x snap-mandatory">
+              {events.map((event) => (
+                <Link key={event.id} to="/events" className="snap-start flex-none w-64 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block">
+                  {event.photo_url ? (
+                    <img src={getImageUrl(event.photo_url)} alt={event.title} className="w-full object-contain bg-flash-dark" onError={(e) => { e.target.style.display = 'none'; }} />
+                  ) : (
+                    <div className="h-44 bg-flash-border flex items-center justify-center">
+                      <FaCalendar className="text-flash-yellow text-4xl opacity-30" />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <h3 className="text-white font-bold text-base mb-1 line-clamp-1">{event.title}</h3>
+                    <div className="flex items-center gap-1 text-flash-yellow text-xs">
+                      <FaCalendar size={9} />
+                      <span>{format(new Date(event.event_date), 'MMM d, yyyy')}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ─── MODELS STRIP ─── */}
       {models.length > 0 && (
         <section className="py-20 px-4 bg-flash-dark">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="section-subtitle mb-3">Live Competition</p>
-              <h2 className="section-title mb-4">Model Voting</h2>
-              <div className="yellow-divider mx-auto mb-4" />
-              <p className="text-gray-400 max-w-xl mx-auto">Vote for your favorite Flash Lounge model. Every vote counts!</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-              {models.map((model, idx) => (
-                <div key={model.id} className={`card text-center hover:border-flash-yellow/50 transition-all relative overflow-hidden ${idx === 0 ? 'border-flash-yellow/40' : ''}`}>
-                  {idx === 0 && (
-                    <div className="absolute top-0 right-0 bg-flash-yellow text-flash-black text-xs font-bold px-3 py-1 rounded-bl-lg">
-                      #1 LEADING
-                    </div>
-                  )}
-                  <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-2 border-flash-border">
-                    {model.photo_url
-                      ? <img src={getImageUrl(model.photo_url)} alt={model.name} className="w-full h-full object-cover" />
-                      : <div className="w-full h-full bg-flash-border" />
-                    }
-                  </div>
-                  <h3 className="text-white font-bold mb-1">{model.name}</h3>
-                  <div className="flex items-center justify-center gap-1 text-flash-yellow mb-3">
-                    <FaStar size={12} />
-                    <span className="font-bold">{model.vote_count?.toLocaleString()}</span>
-                    <span className="text-gray-500 text-xs">votes</span>
-                  </div>
-                  <p className="text-xs text-gray-400">₦{Number(model.vote_price).toLocaleString()} per vote</p>
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <Link to="/voting" className="btn-primary text-base px-8">
-                Vote Now <FaArrowRight />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+              <div>
+                <p className="section-subtitle mb-2">Live Competition</p>
+                <h2 className="section-title">Model Voting</h2>
+              </div>
+              <Link to="/voting" className="btn-secondary text-sm">
+                Vote Now <FaArrowRight size={12} />
               </Link>
+            </div>
+            <div className="scroll-strip snap-x snap-mandatory">
+              {models.map((model) => (
+                <Link key={model.id} to="/voting" className="snap-start flex-none w-52 rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block text-center">
+                  <div className="pt-6 px-4 pb-5 flex flex-col items-center">
+                    <div className="w-24 h-24 rounded-full overflow-hidden mb-3 border-2 border-flash-border group-hover:border-flash-yellow/50 transition-colors">
+                      {model.photo_url
+                        ? <img src={getImageUrl(model.photo_url)} alt={model.name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                        : <div className="w-full h-full bg-flash-border" />
+                      }
+                    </div>
+                    <h3 className="text-white font-bold mb-1 line-clamp-1 w-full">{model.name}</h3>
+                    <div className="flex items-center gap-1 text-flash-yellow text-xs mb-4">
+                      <FaStar size={10} />
+                      <span className="font-bold">{model.vote_count?.toLocaleString()}</span>
+                      <span className="text-gray-500">votes</span>
+                    </div>
+                    <span className="bg-flash-yellow text-flash-black text-xs font-bold px-4 py-1.5 rounded-lg">Vote Now</span>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
