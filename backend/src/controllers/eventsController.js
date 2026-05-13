@@ -29,7 +29,7 @@ const createEvent = async (req, res) => {
     return res.status(400).json({ error: 'Title, date, and time are required' });
   }
   try {
-    const photoUrl = req.file ? `/uploads/events/${req.file.filename}` : null;
+    const photoUrl = req.file ? req.file.path : null;
     const result = await pool.query(
       `INSERT INTO events (title, description, event_date, event_time, photo_url)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
@@ -50,7 +50,7 @@ const updateEvent = async (req, res) => {
     const existing = await pool.query('SELECT * FROM events WHERE id = $1', [id]);
     if (existing.rows.length === 0) return res.status(404).json({ error: 'Event not found' });
     const e = existing.rows[0];
-    const photoUrl = req.file ? `/uploads/events/${req.file.filename}` : e.photo_url;
+    const photoUrl = req.file ? req.file.path : e.photo_url;
     const result = await pool.query(
       `UPDATE events SET title=$1, description=$2, event_date=$3, event_time=$4, photo_url=$5, is_active=$6, updated_at=NOW()
        WHERE id=$7 RETURNING *`,

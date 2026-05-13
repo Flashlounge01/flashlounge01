@@ -159,7 +159,7 @@ const createModel = async (req, res) => {
   const { name, vote_price } = req.body;
   if (!name || !vote_price) return res.status(400).json({ error: 'Name and vote price required' });
   try {
-    const photoUrl = req.file ? `/uploads/models/${req.file.filename}` : null;
+    const photoUrl = req.file ? req.file.path : null;
     const result = await pool.query(
       'INSERT INTO models (name, photo_url, vote_price) VALUES ($1, $2, $3) RETURNING *',
       [name, photoUrl, parseFloat(vote_price)]
@@ -179,7 +179,7 @@ const updateModel = async (req, res) => {
     const existing = await pool.query('SELECT * FROM models WHERE id=$1', [id]);
     if (existing.rows.length === 0) return res.status(404).json({ error: 'Model not found' });
     const m = existing.rows[0];
-    const photoUrl = req.file ? `/uploads/models/${req.file.filename}` : m.photo_url;
+    const photoUrl = req.file ? req.file.path : m.photo_url;
     const result = await pool.query(
       `UPDATE models SET name=$1, photo_url=$2, vote_price=$3, is_active=$4, updated_at=NOW() WHERE id=$5 RETURNING *`,
       [name || m.name, photoUrl, vote_price ? parseFloat(vote_price) : m.vote_price, is_active !== undefined ? is_active : m.is_active, id]

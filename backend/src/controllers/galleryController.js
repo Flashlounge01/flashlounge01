@@ -32,7 +32,7 @@ const uploadPhoto = async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Photo file is required' });
   const { caption, category } = req.body;
   try {
-    const photoUrl = `/uploads/gallery/${req.file.filename}`;
+    const photoUrl = req.file.path;
     const result = await pool.query(
       'INSERT INTO gallery_photos (photo_url, caption, category) VALUES ($1, $2, $3) RETURNING *',
       [photoUrl, caption || '', category || 'general']

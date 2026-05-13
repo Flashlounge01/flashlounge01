@@ -47,7 +47,7 @@ const createMenuItem = async (req, res) => {
     return res.status(400).json({ error: 'Name, price, and category are required' });
   }
   try {
-    const photoUrl = req.file ? `/uploads/menu/${req.file.filename}` : null;
+    const photoUrl = req.file ? req.file.path : null;
     const result = await pool.query(
       `INSERT INTO menu_items (name, description, price, category, photo_url)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
@@ -68,7 +68,7 @@ const updateMenuItem = async (req, res) => {
     const existing = await pool.query('SELECT * FROM menu_items WHERE id = $1', [id]);
     if (existing.rows.length === 0) return res.status(404).json({ error: 'Item not found' });
 
-    const photoUrl = req.file ? `/uploads/menu/${req.file.filename}` : existing.rows[0].photo_url;
+    const photoUrl = req.file ? req.file.path : existing.rows[0].photo_url;
     const result = await pool.query(
       `UPDATE menu_items SET name=$1, description=$2, price=$3, category=$4, photo_url=$5, is_available=$6, updated_at=NOW()
        WHERE id=$7 RETURNING *`,
