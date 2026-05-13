@@ -75,6 +75,7 @@ export default function GalleryPage() {
                     src={getImageUrl(photo.photo_url)}
                     alt={photo.caption || 'Flash Lounge'}
                     className="w-full block group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.style.display = 'none'; }}
                   />
                   {photo.caption && (
                     <div className="absolute inset-0 bg-flash-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
@@ -102,6 +103,7 @@ export default function GalleryPage() {
             alt={lightbox.caption || 'Flash Lounge'}
             className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
             onClick={(e) => e.stopPropagation()}
+            onError={(e) => e.target.style.display = 'none'}
           />
           {lightbox.caption && (
             <div className="absolute bottom-6 left-0 right-0 text-center text-white text-sm">{lightbox.caption}</div>

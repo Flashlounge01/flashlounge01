@@ -28,6 +28,28 @@ async function initDb() {
     console.error('Admin seed failed:', err.message);
     throw err;
   }
+
+  try {
+    // Remove gallery records that have broken local file paths (not Cloudinary URLs)
+    const { rowCount: galleryDeleted } = await pool.query(
+      "DELETE FROM gallery_photos WHERE photo_url IS NOT NULL AND photo_url NOT LIKE 'http%'"
+    );
+    // Null out broken local photo URLs on other tables (keep the records)
+    const { rowCount: eventsCleared } = await pool.query(
+      "UPDATE events SET photo_url = NULL WHERE photo_url IS NOT NULL AND photo_url NOT LIKE 'http%'"
+    );
+    const { rowCount: menuCleared } = await pool.query(
+      "UPDATE menu_items SET photo_url = NULL WHERE photo_url IS NOT NULL AND photo_url NOT LIKE 'http%'"
+    );
+    const { rowCount: modelsCleared } = await pool.query(
+      "UPDATE models SET photo_url = NULL WHERE photo_url IS NOT NULL AND photo_url NOT LIKE 'http%'"
+    );
+    if (galleryDeleted || eventsCleared || menuCleared || modelsCleared) {
+      console.log(`Cleanup: removed ${galleryDeleted} broken gallery records, cleared photo_url on ${eventsCleared} events, ${menuCleared} menu items, ${modelsCleared} models.`);
+    }
+  } catch (err) {
+    console.error('Cleanup of broken image paths failed:', err.message);
+  }
 }
 
 module.exports = initDb;

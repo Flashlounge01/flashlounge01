@@ -78,7 +78,7 @@ export default function AdminEvents() {
             <div key={ev.id} className="card p-0 overflow-hidden hover:border-flash-border/60 flex flex-col sm:flex-row">
               {ev.photo_url ? (
                 <div className="sm:w-32 h-28 sm:h-auto flex-shrink-0 overflow-hidden">
-                  <img src={getImageUrl(ev.photo_url)} alt={ev.title} className="w-full h-full object-cover" />
+                  <img src={getImageUrl(ev.photo_url)} alt={ev.title} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                 </div>
               ) : (
                 <div className="sm:w-32 h-28 sm:h-auto flex-shrink-0 bg-flash-border flex items-center justify-center">

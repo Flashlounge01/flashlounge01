@@ -4,11 +4,11 @@ const pool = require('../db/pool');
 const getGallery = async (req, res) => {
   try {
     const { category } = req.query;
-    let query = 'SELECT * FROM gallery_photos';
+    let query = "SELECT * FROM gallery_photos WHERE photo_url LIKE 'http%'";
     const params = [];
     if (category) {
       params.push(category);
-      query += ` WHERE category = $${params.length}`;
+      query += ` AND category = $${params.length}`;
     }
     query += ' ORDER BY created_at DESC';
     const result = await pool.query(query, params);
@@ -20,7 +20,7 @@ const getGallery = async (req, res) => {
 
 const getGalleryCategories = async (req, res) => {
   try {
-    const result = await pool.query('SELECT DISTINCT category FROM gallery_photos ORDER BY category');
+    const result = await pool.query("SELECT DISTINCT category FROM gallery_photos WHERE photo_url LIKE 'http%' ORDER BY category");
     res.json(result.rows.map((r) => r.category));
   } catch (err) {
     res.status(500).json({ error: 'Server error' });

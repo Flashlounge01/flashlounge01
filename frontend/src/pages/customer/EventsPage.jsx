@@ -60,6 +60,7 @@ export default function EventsPage() {
                       src={getImageUrl(event.photo_url)}
                       alt={event.title}
                       className="w-full object-contain bg-flash-dark"
+                      onError={(e) => { e.target.style.display = 'none'; }}
                     />
                   ) : (
                     <div className="h-52 bg-flash-border flex items-center justify-center">
@@ -110,6 +111,7 @@ export default function EventsPage() {
                 src={getImageUrl(selected.photo_url)}
                 alt={selected.title}
                 className="w-full object-contain bg-flash-dark rounded-t-2xl"
+                onError={(e) => e.target.style.display = 'none'}
               />
             )}
 
