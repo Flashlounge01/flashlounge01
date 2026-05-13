@@ -170,50 +170,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── SUITES & LODGING ─── */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="section-subtitle mb-3">OUR SUITES</p>
-            <h2 className="section-title mb-2">Flash Suites &amp; Lodging</h2>
-            <p className="text-flash-muted italic text-lg mb-4">Stay the Flash Way</p>
-            <div className="yellow-divider mx-auto mb-6" />
-            <Link to="/reserve" className="btn-primary">
-              Book a Suite <FaArrowRight />
-            </Link>
-          </div>
-
-          <div className="scroll-strip snap-x snap-mandatory">
-            {[
-              '/images/room-1.jpeg',
-              '/images/room-2.jpeg',
-              '/images/room-3.jpeg',
-              '/images/room-4.jpeg',
-              '/images/room-5.jpeg',
-            ].map((src, i) => (
-              <Link
-                key={src}
-                to="/reserve"
-                className="snap-start flex-none rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block"
-                style={{ width: '280px' }}
-              >
-                <img
-                  src={src}
-                  alt={`Suite ${i + 1}`}
-                  className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  style={{ height: '320px' }}
-                />
-                <div className="p-4 flex justify-center">
-                  <span className="inline-block bg-flash-yellow text-flash-black text-sm font-bold px-6 py-2 rounded-lg">
-                    Book Now
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── GALLERY STRIP ─── */}
       <section className="py-16 px-4 bg-flash-black">
         <div className="max-w-7xl mx-auto">
@@ -294,6 +250,50 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* ─── SUITES & LODGING ─── */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="section-subtitle mb-3">OUR SUITES</p>
+            <h2 className="section-title mb-2">Flash Suites &amp; Lodging</h2>
+            <p className="text-flash-muted italic text-lg mb-4">Stay the Flash Way</p>
+            <div className="yellow-divider mx-auto mb-6" />
+            <Link to="/reserve" className="btn-primary">
+              Book a Suite <FaArrowRight />
+            </Link>
+          </div>
+
+          <div className="scroll-strip snap-x snap-mandatory">
+            {[
+              '/images/room-1.jpeg',
+              '/images/room-2.jpeg',
+              '/images/room-3.jpeg',
+              '/images/room-4.jpeg',
+              '/images/room-5.jpeg',
+            ].map((src, i) => (
+              <Link
+                key={src}
+                to="/reserve"
+                className="snap-start flex-none rounded-xl overflow-hidden bg-flash-card border border-flash-border hover:border-flash-yellow/50 transition-all group block"
+                style={{ width: '280px' }}
+              >
+                <img
+                  src={src}
+                  alt={`Suite ${i + 1}`}
+                  className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  style={{ height: '320px' }}
+                />
+                <div className="p-4 flex justify-center">
+                  <span className="inline-block bg-flash-yellow text-flash-black text-sm font-bold px-6 py-2 rounded-lg">
+                    Book Now
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ─── MENU STRIP ─── */}
       {menuItems.length > 0 && (
