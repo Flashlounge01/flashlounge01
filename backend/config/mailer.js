@@ -1,11 +1,14 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-module.exports = transporter;
+// sendMail({ from, to, subject, html }) — drop-in replacement for nodemailer
+async function sendMail({ from, to, subject, html }) {
+  const { data, error } = await resend.emails.send({ from, to, subject, html });
+  if (error) {
+    throw new Error(`Resend API error: ${error.message || JSON.stringify(error)}`);
+  }
+  return data;
+}
+
+module.exports = { sendMail };

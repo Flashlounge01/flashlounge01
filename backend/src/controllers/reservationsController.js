@@ -1,6 +1,8 @@
 const pool = require('../db/pool');
 const mailer = require('../../config/mailer');
 
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+
 // ─── Shared HTML shell ────────────────────────────────────────────────────────
 function emailShell(body) {
   return `<!DOCTYPE html>
@@ -93,8 +95,8 @@ async function sendAdminNotification(reservation) {
   `;
 
   await mailer.sendMail({
-    from: `"Flash Lounge N Suite" <${process.env.GMAIL_USER}>`,
-    to: process.env.GMAIL_USER,
+    from: `Flash Lounge N Suite <${FROM_EMAIL}>`,
+    to: ADMIN_EMAIL,
     subject: `📋 New Reservation — ${customer_name} · ${reservation_date}`,
     html: emailShell(body),
   });
@@ -115,7 +117,7 @@ async function sendCustomerSubmissionEmail(reservation) {
   `;
 
   await mailer.sendMail({
-    from: `"Flash Lounge N Suite" <${process.env.GMAIL_USER}>`,
+    from: `Flash Lounge N Suite <${FROM_EMAIL}>`,
     to: customer_email,
     subject: `Reservation Received — Flash Lounge N Suite`,
     html: emailShell(body),
@@ -181,7 +183,7 @@ async function sendStatusUpdateEmail(reservation) {
   `;
 
   await mailer.sendMail({
-    from: `"Flash Lounge N Suite" <${process.env.GMAIL_USER}>`,
+    from: `Flash Lounge N Suite <${FROM_EMAIL}>`,
     to: customer_email,
     subject: config.subject,
     html: emailShell(body),
