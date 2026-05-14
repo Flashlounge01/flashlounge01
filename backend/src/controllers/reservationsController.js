@@ -1,7 +1,12 @@
 const pool = require('../db/pool');
 const mailer = require('../../config/mailer');
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+const FROM_EMAIL = 'Flash Lounge N Suite <noreply@flashlounge.org>';
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'flashloungeandsuite@gmail.com';
+if (!process.env.ADMIN_EMAIL) {
+  console.warn('[Email] ADMIN_EMAIL env var is not set — falling back to flashloungeandsuite@gmail.com');
+}
 
 // ─── Shared HTML shell ────────────────────────────────────────────────────────
 function emailShell(body) {
@@ -95,7 +100,7 @@ async function sendAdminNotification(reservation) {
   `;
 
   await mailer.sendMail({
-    from: `Flash Lounge N Suite <${FROM_EMAIL}>`,
+    from: FROM_EMAIL,
     to: ADMIN_EMAIL,
     subject: `📋 New Reservation — ${customer_name} · ${reservation_date}`,
     html: emailShell(body),
@@ -117,7 +122,7 @@ async function sendCustomerSubmissionEmail(reservation) {
   `;
 
   await mailer.sendMail({
-    from: `Flash Lounge N Suite <${FROM_EMAIL}>`,
+    from: FROM_EMAIL,
     to: customer_email,
     subject: `Reservation Received — Flash Lounge N Suite`,
     html: emailShell(body),
@@ -183,7 +188,7 @@ async function sendStatusUpdateEmail(reservation) {
   `;
 
   await mailer.sendMail({
-    from: `Flash Lounge N Suite <${FROM_EMAIL}>`,
+    from: FROM_EMAIL,
     to: customer_email,
     subject: config.subject,
     html: emailShell(body),
