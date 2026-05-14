@@ -10,6 +10,11 @@ const STRIP_IMAGES = [
   '/images/gallery-2.jpeg',
   '/images/gallery-3.jpeg',
   '/images/gallery-4.jpeg',
+  '/images/gallery-5.jpeg',
+  '/images/gallery-6.jpeg',
+  '/images/gallery-7.jpeg',
+  '/images/gallery-8.jpeg',
+  '/images/gallery-9.jpeg',
 ];
 
 export default function HomePage() {
