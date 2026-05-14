@@ -292,11 +292,6 @@ export default function HomePage() {
                   className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
                   style={{ height: '320px' }}
                 />
-                <div className="p-4 flex justify-center">
-                  <span className="inline-block bg-flash-yellow text-flash-black text-sm font-bold px-6 py-2 rounded-lg">
-                    Book Now
-                  </span>
-                </div>
               </Link>
             ))}
           </div>
