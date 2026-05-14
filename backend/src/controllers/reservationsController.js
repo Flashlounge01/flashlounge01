@@ -1,57 +1,48 @@
 const pool = require('../db/pool');
-const resend = require('../../config/resend');
+const mailer = require('../../config/mailer');
 
-const ADMIN_EMAIL = 'flashloungesandsuite@gmail.com';
-const FROM_EMAIL = 'onboarding@resend.dev';
+const ADMIN_EMAIL = 'flashloungeandsuite@gmail.com';
 
-async function sendReservationEmails({ customer_name, customer_phone, customer_email, reservation_date, reservation_time, guests_count, special_requests }) {
-  const detailsHtml = `
+function buildDetailsHtml(reservation_date, reservation_time, guests_count, special_requests) {
+  return `
     <p><strong>Date:</strong> ${reservation_date}</p>
     <p><strong>Time:</strong> ${reservation_time}</p>
     <p><strong>Guests:</strong> ${guests_count}</p>
     ${special_requests ? `<p><strong>Special Requests:</strong> ${special_requests}</p>` : ''}
   `;
+}
 
-  const emails = [];
+async function sendAdminEmail({ customer_name, customer_phone, customer_email, reservation_date, reservation_time, guests_count, special_requests }) {
+  await mailer.sendMail({
+    from: `"Flash Lounge N Suite" <${process.env.GMAIL_USER}>`,
+    to: ADMIN_EMAIL,
+    subject: `New Reservation - ${customer_name}`,
+    html: `
+      <h2>New Reservation Submitted</h2>
+      <p><strong>Name:</strong> ${customer_name}</p>
+      <p><strong>Phone:</strong> ${customer_phone}</p>
+      <p><strong>Email:</strong> ${customer_email || 'Not provided'}</p>
+      ${buildDetailsHtml(reservation_date, reservation_time, guests_count, special_requests)}
+    `,
+  });
+}
 
-  // Email 1 — Customer confirmation (only if they provided an email)
-  if (customer_email) {
-    emails.push(
-      resend.emails.send({
-        from: FROM_EMAIL,
-        to: customer_email,
-        subject: 'Reservation Confirmed - Flash Lounge N Suite',
-        html: `
-          <h2>Hi ${customer_name}, your reservation is confirmed!</h2>
-          <p>Thank you for choosing Flash Lounge N Suite. We're excited to host you.</p>
-          <h3>Your Reservation Details</h3>
-          ${detailsHtml}
-          <p>Our team will call you at <strong>${customer_phone}</strong> to confirm your booking.</p>
-          <p>For enquiries, reach us at <strong>07059693068</strong>.</p>
-          <br/>
-          <p style="color:#888;">Flash Lounge N Suite — Flash Ways</p>
-        `,
-      })
-    );
-  }
-
-  // Email 2 — Admin notification (always sent)
-  emails.push(
-    resend.emails.send({
-      from: FROM_EMAIL,
-      to: ADMIN_EMAIL,
-      subject: `New Reservation - ${customer_name}`,
-      html: `
-        <h2>New Reservation Submitted</h2>
-        <p><strong>Name:</strong> ${customer_name}</p>
-        <p><strong>Phone:</strong> ${customer_phone}</p>
-        <p><strong>Email:</strong> ${customer_email || 'Not provided'}</p>
-        ${detailsHtml}
-      `,
-    })
-  );
-
-  await Promise.all(emails);
+async function sendCustomerEmail({ customer_name, customer_phone, customer_email, reservation_date, reservation_time, guests_count, special_requests }) {
+  await mailer.sendMail({
+    from: `"Flash Lounge N Suite" <${process.env.GMAIL_USER}>`,
+    to: customer_email,
+    subject: 'Reservation Confirmed - Flash Lounge N Suite',
+    html: `
+      <h2>Hi ${customer_name}, your reservation is confirmed!</h2>
+      <p>Thank you for choosing Flash Lounge N Suite. We're excited to host you.</p>
+      <h3>Your Reservation Details</h3>
+      ${buildDetailsHtml(reservation_date, reservation_time, guests_count, special_requests)}
+      <p>Our team will call you at <strong>${customer_phone}</strong> to confirm your booking.</p>
+      <p>For enquiries, reach us at <strong>07059693068</strong>.</p>
+      <br/>
+      <p style="color:#888;">Flash Lounge N Suite — Flash Ways</p>
+    `,
+  });
 }
 
 // Public
@@ -73,11 +64,18 @@ const createReservation = async (req, res) => {
       [customer_name, customer_phone, customer_email || null, reservation_date, reservation_time, parseInt(guests_count), special_requests || null]
     );
     const reservation = result.rows[0];
-    console.log(`New reservation: ${customer_name}, ${reservation_date} ${reservation_time}, ${guests_count} guests`);
+    console.log(`[Reservation] Saved: ${customer_name}, ${reservation_date} ${reservation_time}, ${guests_count} guests`);
 
-    // Send emails fire-and-forget — never block the response if email fails
-    sendReservationEmails({ customer_name, customer_phone, customer_email, reservation_date, reservation_time, guests_count, special_requests })
-      .catch((err) => console.error('Reservation email error:', err.message));
+    // Send emails independently — one failing never blocks the other or the response
+    sendAdminEmail({ customer_name, customer_phone, customer_email, reservation_date, reservation_time, guests_count, special_requests })
+      .then(() => console.log(`[Email] Admin notification sent for: ${customer_name}`))
+      .catch((err) => console.error(`[Email] Admin notification FAILED for ${customer_name}:`, err.message));
+
+    if (customer_email) {
+      sendCustomerEmail({ customer_name, customer_phone, customer_email, reservation_date, reservation_time, guests_count, special_requests })
+        .then(() => console.log(`[Email] Customer confirmation sent to: ${customer_email}`))
+        .catch((err) => console.error(`[Email] Customer confirmation FAILED for ${customer_email}:`, err.message));
+    }
 
     res.status(201).json({ message: 'Reservation submitted successfully!', reservation });
   } catch (err) {
