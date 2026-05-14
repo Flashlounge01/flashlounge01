@@ -74,7 +74,7 @@ export default function ReservationPage() {
             <p className="section-subtitle mb-3">Join Us Tonight</p>
             <h1 className="section-title mb-4">Make a Reservation</h1>
             <div className="yellow-divider mx-auto mb-4" />
-            <p className="text-gray-400 max-w-xl mx-auto">Book your table at Flash Lounge N Suite and secure your spot for an unforgettable experience.</p>
+            <p className="text-gray-400 max-w-xl mx-auto">Book your table or a room at Flash Lounge N Suite and secure your spot for an unforgettable experience.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
