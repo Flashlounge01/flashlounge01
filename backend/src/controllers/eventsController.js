@@ -4,8 +4,7 @@ const pool = require('../db/pool');
 const getEvents = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM events WHERE is_active = true AND event_date >= CURRENT_DATE
-       ORDER BY event_date, event_time`
+      `SELECT * FROM events WHERE is_active = true ORDER BY event_date DESC, event_time DESC`
     );
     res.json(result.rows);
   } catch (err) {

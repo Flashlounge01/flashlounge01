@@ -36,7 +36,7 @@ export default function HomePage() {
       api.get('/models').catch(() => ({ data: [] })),
       api.get('/gallery').catch(() => ({ data: [] })),
     ]).then(([ev, mn, mo, ga]) => {
-      setEvents(ev.data.slice(0, 3));
+      setEvents(ev.data);
       setMenuItems(mn.data.slice(0, 6));
       setModels(mo.data.slice(0, 3));
       setGallery(ga.data.slice(0, 6));
