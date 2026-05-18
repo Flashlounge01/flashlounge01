@@ -17,6 +17,7 @@ app.use(helmet({
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
       'img-src': ["'self'", 'data:', 'https://res.cloudinary.com'],
+      'media-src': ["'self'", 'https://res.cloudinary.com'],
     },
   },
 }));

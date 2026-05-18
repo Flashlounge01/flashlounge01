@@ -30,6 +30,12 @@ async function initDb() {
   }
 
   try {
+    await pool.query(`ALTER TABLE gallery_photos ADD COLUMN IF NOT EXISTS media_type VARCHAR(10) DEFAULT 'image'`);
+  } catch (err) {
+    console.error('Migration add media_type failed:', err.message);
+  }
+
+  try {
     // Remove gallery records that have broken local file paths (not Cloudinary URLs)
     const { rowCount: galleryDeleted } = await pool.query(
       "DELETE FROM gallery_photos WHERE photo_url IS NOT NULL AND photo_url NOT LIKE 'http%'"

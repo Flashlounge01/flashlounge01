@@ -12,10 +12,11 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'flashlounge',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    resource_type: 'auto',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm', 'm4v', '3gp', 'ogv'],
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } });
 
 module.exports = { cloudinary, upload };

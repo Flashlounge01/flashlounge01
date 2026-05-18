@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaPlay } from 'react-icons/fa';
 import CustomerLayout from '../../components/layout/CustomerLayout';
 import api, { getImageUrl } from '../../utils/api';
 
@@ -26,6 +26,7 @@ export default function GalleryPage() {
   }, []);
 
   const filtered = active === 'All' ? photos : photos.filter((p) => p.category === active);
+  const isVideo = (item) => item.media_type === 'video';
 
   return (
     <CustomerLayout>
@@ -33,7 +34,7 @@ export default function GalleryPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <p className="section-subtitle mb-3">Moments & Memories</p>
-            <h1 className="section-title mb-4">Photo Gallery</h1>
+            <h1 className="section-title mb-4">Gallery</h1>
             <div className="yellow-divider mx-auto mb-4" />
             <p className="text-gray-400 max-w-xl mx-auto">A glimpse into the Flash Lounge experience. Every night is a story.</p>
           </div>
@@ -62,24 +63,40 @@ export default function GalleryPage() {
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-gray-500">No photos in this category yet.</div>
+            <div className="text-center py-20 text-gray-500">No media in this category yet.</div>
           ) : (
             <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3">
-              {filtered.map((photo) => (
+              {filtered.map((item) => (
                 <div
-                  key={photo.id}
+                  key={item.id}
                   className="break-inside-avoid overflow-hidden rounded-xl cursor-pointer group relative"
-                  onClick={() => setLightbox(photo)}
+                  onClick={() => setLightbox(item)}
                 >
-                  <img
-                    src={getImageUrl(photo.photo_url)}
-                    alt={photo.caption || 'Flash Lounge'}
-                    className="w-full block group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.style.display = 'none'; }}
-                  />
-                  {photo.caption && (
+                  {isVideo(item) ? (
+                    <video
+                      src={getImageUrl(item.photo_url)}
+                      className="w-full block group-hover:scale-105 transition-transform duration-300"
+                      preload="metadata"
+                      muted
+                    />
+                  ) : (
+                    <img
+                      src={getImageUrl(item.photo_url)}
+                      alt={item.caption || 'Flash Lounge'}
+                      className="w-full block group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.style.display = 'none'; }}
+                    />
+                  )}
+                  {isVideo(item) && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center group-hover:bg-flash-yellow/80 transition-colors">
+                        <FaPlay className="text-white text-base ml-0.5" />
+                      </div>
+                    </div>
+                  )}
+                  {item.caption && (
                     <div className="absolute inset-0 bg-flash-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                      <p className="text-white text-sm font-medium">{photo.caption}</p>
+                      <p className="text-white text-sm font-medium">{item.caption}</p>
                     </div>
                   )}
                 </div>
@@ -98,13 +115,23 @@ export default function GalleryPage() {
           <button className="absolute top-4 right-4 text-white hover:text-flash-yellow p-2 z-10" onClick={() => setLightbox(null)}>
             <FaTimes size={24} />
           </button>
-          <img
-            src={getImageUrl(lightbox.photo_url)}
-            alt={lightbox.caption || 'Flash Lounge'}
-            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-            onError={(e) => e.target.style.display = 'none'}
-          />
+          {isVideo(lightbox) ? (
+            <video
+              src={getImageUrl(lightbox.photo_url)}
+              className="max-w-full max-h-[90vh] rounded-xl shadow-2xl"
+              controls
+              autoPlay
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <img
+              src={getImageUrl(lightbox.photo_url)}
+              alt={lightbox.caption || 'Flash Lounge'}
+              className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+              onError={(e) => e.target.style.display = 'none'}
+            />
+          )}
           {lightbox.caption && (
             <div className="absolute bottom-6 left-0 right-0 text-center text-white text-sm">{lightbox.caption}</div>
           )}

@@ -29,15 +29,15 @@ const getGalleryCategories = async (req, res) => {
 
 // Admin
 const uploadPhoto = async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'Photo file is required' });
-  const { caption, category } = req.body;
+  if (!req.file) return res.status(400).json({ error: 'Media file is required' });
+  const { caption, category, media_type } = req.body;
   try {
     const photoUrl = req.file.path;
     const result = await pool.query(
-      'INSERT INTO gallery_photos (photo_url, caption, category) VALUES ($1, $2, $3) RETURNING *',
-      [photoUrl, caption || '', category || 'general']
+      'INSERT INTO gallery_photos (photo_url, caption, category, media_type) VALUES ($1, $2, $3, $4) RETURNING *',
+      [photoUrl, caption || '', category || 'general', media_type || 'image']
     );
-    console.log(`Gallery photo uploaded: ${photoUrl}`);
+    console.log(`Gallery media uploaded: ${photoUrl}`);
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('uploadPhoto error:', err.message);

@@ -9,7 +9,7 @@ router.get('/', getGallery);
 router.get('/categories', getGalleryCategories);
 
 // Admin
-router.post('/', authenticateToken, uploadSingle('photo'), uploadPhoto);
+router.post('/', authenticateToken, uploadSingle('media'), uploadPhoto);
 router.delete('/:id', authenticateToken, deletePhoto);
 
 module.exports = router;

@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS gallery_photos (
   photo_url TEXT NOT NULL,
   caption TEXT,
   category VARCHAR(100) DEFAULT 'general',
+  media_type VARCHAR(10) DEFAULT 'image',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
