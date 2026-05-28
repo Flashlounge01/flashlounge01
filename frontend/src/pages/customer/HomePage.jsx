@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBolt, FaPhone, FaMapMarkerAlt, FaClock, FaTiktok, FaArrowRight, FaStar, FaCalendar, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaBolt, FaPhone, FaMapMarkerAlt, FaClock, FaTiktok, FaArrowRight, FaStar, FaCalendar, FaTimes, FaChevronLeft, FaChevronRight, FaPlay } from 'react-icons/fa';
 import CustomerLayout from '../../components/layout/CustomerLayout';
 import api, { getImageUrl } from '../../utils/api';
 import { format } from 'date-fns';
@@ -417,15 +417,51 @@ export default function HomePage() {
                 View All <FaArrowRight size={12} />
               </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div
+              className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+              style={{ gridAutoRows: '180px' }}
+            >
               {gallery.map((photo, i) => (
-                <div key={photo.id} className={`overflow-hidden rounded-xl ${i === 0 ? 'col-span-2 row-span-2' : ''}`}>
-                  <img
-                    src={getImageUrl(photo.photo_url)}
-                    alt={photo.caption || 'Flash Lounge'}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 aspect-square"
-                  />
-                </div>
+                <Link
+                  key={photo.id}
+                  to="/gallery"
+                  className={`overflow-hidden rounded-2xl group relative block ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
+                >
+                  {photo.media_type === 'video' ? (
+                    <video
+                      src={getImageUrl(photo.photo_url)}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      preload="metadata"
+                      muted
+                      playsInline
+                    />
+                  ) : (
+                    <img
+                      src={getImageUrl(photo.photo_url)}
+                      alt={photo.caption || 'Flash Lounge'}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => { e.target.style.display = 'none'; if (e.target.parentElement) e.target.parentElement.style.display = 'none'; }}
+                    />
+                  )}
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Gold ring */}
+                  <div className="absolute inset-0 rounded-2xl pointer-events-none ring-0 ring-inset ring-flash-yellow/55 group-hover:ring-[1.5px] transition-all duration-300" />
+                  {/* Video play button */}
+                  {photo.media_type === 'video' && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-10 h-10 rounded-full bg-black/55 border border-white/20 flex items-center justify-center group-hover:bg-flash-yellow group-hover:border-flash-yellow transition-all duration-300">
+                        <FaPlay className="text-white text-xs ml-0.5 group-hover:text-flash-black" />
+                      </div>
+                    </div>
+                  )}
+                  {/* Caption on hover for the hero tile */}
+                  {i === 0 && photo.caption && (
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                      <p className="text-white text-sm font-medium line-clamp-2">{photo.caption}</p>
+                    </div>
+                  )}
+                </Link>
               ))}
             </div>
           </div>
