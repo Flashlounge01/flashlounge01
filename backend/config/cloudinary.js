@@ -10,11 +10,10 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
+  params: async (req, file) => ({
     folder: 'flashlounge',
-    resource_type: 'auto',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm', 'm4v', '3gp', 'ogv'],
-  },
+    resource_type: file.mimetype.startsWith('video/') ? 'video' : 'image',
+  }),
 });
 
 const upload = multer({ storage, limits: { fileSize: 100 * 1024 * 1024 } });

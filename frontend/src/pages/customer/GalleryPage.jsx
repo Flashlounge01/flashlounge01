@@ -78,6 +78,7 @@ export default function GalleryPage() {
                       className="w-full block group-hover:scale-105 transition-transform duration-300"
                       preload="metadata"
                       muted
+                      playsInline
                     />
                   ) : (
                     <img
@@ -121,6 +122,7 @@ export default function GalleryPage() {
               className="max-w-full max-h-[90vh] rounded-xl shadow-2xl"
               controls
               autoPlay
+              playsInline
               onClick={(e) => e.stopPropagation()}
             />
           ) : (
