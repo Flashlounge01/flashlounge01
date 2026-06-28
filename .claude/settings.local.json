@@ -11,7 +11,16 @@
       "PowerShell(Get-NetTCPConnection *)",
       "PowerShell(netstat *)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(railway *)",
+      "Bash(git *)",
+      "Bash(node -e \"try{require\\('resend'\\);console.log\\('resend OK: '+require\\('./node_modules/resend/package.json'\\).version\\)}catch\\(e\\){console.log\\('resend NOT found'\\)}\")",
+      "Bash(Get-ChildItem -Recurse -Name)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\HP ZBook 14\\\\OneDrive\\\\Desktop\\\\Flashlounge\" -Recurse -File | Where-Object { $_.Name -match \"gallery|video|upload\" -or $_.FullName -match \"gallery|video|upload\" } | Select-Object -ExpandProperty FullName)"
     ]
   }
 }

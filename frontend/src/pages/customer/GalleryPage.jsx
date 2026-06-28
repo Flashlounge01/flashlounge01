@@ -7,6 +7,7 @@ const SKELETON_HEIGHTS = ['h-52', 'h-64', 'h-48', 'h-72', 'h-56', 'h-44', 'h-60'
 
 function GalleryCard({ item, index, onOpen }) {
   const ref = useRef(null);
+  const videoRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const isVideo = item.media_type === 'video';
@@ -37,12 +38,16 @@ function GalleryCard({ item, index, onOpen }) {
       {/* Media */}
       {isVideo ? (
         <video
+          ref={videoRef}
           src={getImageUrl(item.photo_url)}
           className="w-full block group-hover:scale-105 transition-transform duration-500 ease-out"
           preload="metadata"
           muted
           playsInline
-          onLoadedMetadata={() => setLoaded(true)}
+          onLoadedMetadata={() => {
+            if (videoRef.current) videoRef.current.currentTime = 0.5;
+            setLoaded(true);
+          }}
         />
       ) : (
         <img

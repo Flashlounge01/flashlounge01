@@ -38,7 +38,7 @@ export default function HomePage() {
     ]).then(([ev, mn, mo, ga]) => {
       setEvents(ev.data);
       setMenuItems(mn.data.slice(0, 6));
-      setModels(mo.data.slice(0, 3));
+      setModels(mo.data);
       setGallery(ga.data.slice(0, 6));
     });
   }, []);
@@ -434,6 +434,7 @@ export default function HomePage() {
                       preload="metadata"
                       muted
                       playsInline
+                      onLoadedMetadata={(e) => { e.target.currentTime = 0.5; }}
                     />
                   ) : (
                     <img
