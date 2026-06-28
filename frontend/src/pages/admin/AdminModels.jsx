@@ -16,6 +16,8 @@ export default function AdminModels() {
   const [saving, setSaving] = useState(false);
   const [expandedVotes, setExpandedVotes] = useState(null);
   const [votes, setVotes] = useState({});
+  const [voteInputs, setVoteInputs] = useState({});
+  const [updatingVotes, setUpdatingVotes] = useState(null);
 
   const loadModels = () => {
     api.get('/models/admin/all')
@@ -74,6 +76,22 @@ export default function AdminModels() {
     if (!window.confirm(`Reset all votes for ${name}? This cannot be undone.`)) return;
     try { await api.post(`/models/${id}/reset`); toast.success('Votes reset!'); loadModels(); }
     catch { toast.error('Reset failed'); }
+  };
+
+  const handleSetVotes = async (id) => {
+    const val = parseInt(voteInputs[id], 10);
+    if (isNaN(val) || val < 0) return toast.error('Enter a valid vote count');
+    setUpdatingVotes(id);
+    try {
+      await api.put(`/models/${id}/set-votes`, { vote_count: val });
+      toast.success('Vote count updated!');
+      loadModels();
+      setVoteInputs((prev) => ({ ...prev, [id]: '' }));
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Update failed');
+    } finally {
+      setUpdatingVotes(null);
+    }
   };
 
   return (
@@ -168,6 +186,32 @@ export default function AdminModels() {
                   )}
                 </div>
               )}
+
+              {/* Manual Vote Count Update */}
+              <div className="border-t border-flash-border bg-flash-dark/60 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <span className="text-gray-400 text-xs whitespace-nowrap">
+                  Current: <span className="text-flash-yellow font-bold">{Number(m.vote_count).toLocaleString()} votes</span>
+                </span>
+                <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="Set vote count"
+                    value={voteInputs[m.id] ?? ''}
+                    onChange={(e) => setVoteInputs((prev) => ({ ...prev, [m.id]: e.target.value }))}
+                    className="input-field py-1.5 text-sm flex-1"
+                  />
+                  <button
+                    onClick={() => handleSetVotes(m.id)}
+                    disabled={updatingVotes === m.id}
+                    className="btn-primary py-1.5 text-sm whitespace-nowrap disabled:opacity-60"
+                  >
+                    {updatingVotes === m.id
+                      ? <div className="w-4 h-4 border-2 border-flash-black border-t-transparent rounded-full animate-spin" />
+                      : 'Update Votes'}
+                  </button>
+                </div>
+              </div>
             </div>
           ))}
         </div>

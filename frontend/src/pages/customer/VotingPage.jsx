@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { FaStar, FaBolt, FaTrophy, FaTimes } from 'react-icons/fa';
-import toast from 'react-hot-toast';
+import { FaStar, FaBolt, FaTrophy, FaTimes, FaWhatsapp } from 'react-icons/fa';
 import CustomerLayout from '../../components/layout/CustomerLayout';
 import api, { getImageUrl } from '../../utils/api';
 
@@ -10,9 +8,6 @@ export default function VotingPage() {
   const [loading, setLoading] = useState(true);
   const [voteModal, setVoteModal] = useState(null);
   const [lightboxModel, setLightboxModel] = useState(null);
-  const [form, setForm] = useState({ voter_name: '', voter_phone: '', voter_email: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [searchParams] = useSearchParams();
 
   const fetchModels = useCallback(() => {
     api.get('/models').then((res) => setModels(res.data)).finally(() => setLoading(false));
@@ -20,42 +15,9 @@ export default function VotingPage() {
 
   useEffect(() => {
     fetchModels();
-    const interval = setInterval(fetchModels, 10000); // Refresh every 10s
+    const interval = setInterval(fetchModels, 10000);
     return () => clearInterval(interval);
   }, [fetchModels]);
-
-  // Handle payment redirect verification
-  useEffect(() => {
-    const ref = searchParams.get('ref');
-    if (ref) {
-      api.get(`/models/verify/${ref}`)
-        .then((res) => {
-          if (res.data.status === 'success') {
-            toast.success(`Vote confirmed! ${res.data.model?.name ? `Go ${res.data.model.name}!` : ''}`);
-            fetchModels();
-          }
-        })
-        .catch(() => {});
-    }
-  }, [searchParams, fetchModels]);
-
-  const handleVote = async (e) => {
-    e.preventDefault();
-    if (!form.voter_name.trim() || !form.voter_phone.trim()) {
-      return toast.error('Please fill in your name and phone number');
-    }
-    setSubmitting(true);
-    try {
-      const res = await api.post(`/models/${voteModal.id}/vote`, form);
-      toast.success('Redirecting to payment...');
-      setTimeout(() => {
-        window.location.href = res.data.checkout_url;
-      }, 500);
-    } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to initiate vote payment');
-      setSubmitting(false);
-    }
-  };
 
   const sorted = [...models].sort((a, b) => b.vote_count - a.vote_count);
 
@@ -71,7 +33,7 @@ export default function VotingPage() {
             <p className="section-subtitle mb-3">Cast Your Vote</p>
             <h1 className="section-title mb-4">Flash Lounge Model Voting</h1>
             <div className="yellow-divider mx-auto mb-4" />
-            <p className="text-gray-400 max-w-xl mx-auto">Vote for your favorite model. Each vote costs a small fee via secure Korapay payment. Vote counts update in real-time!</p>
+            <p className="text-gray-400 max-w-xl mx-auto">Vote for your favorite model. Send payment proof via WhatsApp and your votes will be recorded. Vote counts update in real-time!</p>
           </div>
 
           {loading ? (
@@ -96,7 +58,6 @@ export default function VotingPage() {
                     key={model.id}
                     className={`bg-flash-card border border-flash-border rounded-xl relative overflow-hidden hover:border-flash-yellow/50 transition-all group ${idx === 0 ? 'border-flash-yellow/50' : ''}`}
                   >
-                    {/* Rank badge */}
                     {idx < 3 && (
                       <div className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
                         ${idx === 0 ? 'bg-yellow-500 text-black' : idx === 1 ? 'bg-gray-400 text-black' : 'bg-yellow-800 text-white'}`}>
@@ -104,7 +65,6 @@ export default function VotingPage() {
                       </div>
                     )}
 
-                    {/* Full photo */}
                     <div
                       className="w-full h-[320px] sm:h-[350px] overflow-hidden cursor-zoom-in"
                       onClick={() => model.photo_url && setLightboxModel(model)}
@@ -115,7 +75,6 @@ export default function VotingPage() {
                       }
                     </div>
 
-                    {/* Content */}
                     <div className="p-5">
                       <h3 className="text-white font-bold text-xl text-center mb-1">{model.name}</h3>
 
@@ -134,7 +93,7 @@ export default function VotingPage() {
                       </p>
 
                       <button
-                        onClick={() => { setVoteModal(model); setForm({ voter_name: '', voter_phone: '', voter_email: '' }); }}
+                        onClick={() => setVoteModal(model)}
                         className="w-full btn-primary justify-center"
                       >
                         <FaStar size={14} /> Vote for {model.name.split(' ')[0]}
@@ -171,59 +130,69 @@ export default function VotingPage() {
 
       {/* Vote Modal */}
       {voteModal && (
-        <div className="fixed inset-0 z-50 bg-flash-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setVoteModal(null)}>
-          <div className="bg-flash-card border border-flash-border rounded-2xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-6">
+        <div
+          className="fixed inset-0 z-50 bg-flash-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setVoteModal(null)}
+        >
+          <div
+            className="bg-flash-card border border-flash-border rounded-2xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center mb-5">
               <h2 className="text-white font-bold text-xl">Vote for {voteModal.name}</h2>
-              <button onClick={() => setVoteModal(null)} className="text-gray-400 hover:text-white"><FaTimes /></button>
-            </div>
-
-            <div className="bg-flash-yellow/10 border border-flash-yellow/30 rounded-lg p-3 mb-6 text-center">
-              <p className="text-flash-yellow font-semibold">₦{Number(voteModal.vote_price).toLocaleString()} per vote</p>
-              <p className="text-gray-400 text-xs mt-1">Secure payment via Korapay</p>
-            </div>
-
-            <form onSubmit={handleVote} className="space-y-4">
-              <div>
-                <label className="label">Your Full Name *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="John Doe"
-                  value={form.voter_name}
-                  onChange={(e) => setForm({ ...form, voter_name: e.target.value })}
-                  className="input-field"
-                />
-              </div>
-              <div>
-                <label className="label">Phone Number *</label>
-                <input
-                  type="tel"
-                  required
-                  placeholder="08012345678"
-                  value={form.voter_phone}
-                  onChange={(e) => setForm({ ...form, voter_phone: e.target.value })}
-                  className="input-field"
-                />
-              </div>
-              <div>
-                <label className="label">Email (optional)</label>
-                <input
-                  type="email"
-                  placeholder="you@email.com"
-                  value={form.voter_email}
-                  onChange={(e) => setForm({ ...form, voter_email: e.target.value })}
-                  className="input-field"
-                />
-              </div>
-              <button type="submit" disabled={submitting} className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed">
-                {submitting ? (
-                  <><div className="w-4 h-4 border-2 border-flash-black border-t-transparent rounded-full animate-spin" /> Processing...</>
-                ) : (
-                  <><FaBolt /> Pay & Vote Now</>
-                )}
+              <button
+                onClick={() => setVoteModal(null)}
+                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+              >
+                <FaTimes size={16} />
               </button>
-            </form>
+            </div>
+
+            {/* Price badge */}
+            <div className="bg-flash-yellow/10 border border-flash-yellow/30 rounded-xl p-3 mb-6 text-center">
+              <p className="text-flash-yellow font-bold text-lg">💰 ₦{Number(voteModal.vote_price).toLocaleString()} per vote</p>
+            </div>
+
+            {/* Steps */}
+            <div className="space-y-4 mb-6">
+              <p className="text-flash-yellow font-bold text-sm tracking-widest uppercase">How to Vote</p>
+
+              {/* Step 1 */}
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-flash-yellow font-bold text-sm mb-2">STEP 1</p>
+                <p className="text-gray-300 text-sm mb-2">Send the desired amount to:</p>
+                <div className="bg-black/30 rounded-lg p-3 space-y-1">
+                  <p className="text-white font-semibold text-sm">Acct No: <span className="text-flash-yellow">7056963068</span> (OPAY)</p>
+                  <p className="text-white font-semibold text-sm">Acct Name: <span className="text-flash-yellow">Flash Lounge and Suites</span></p>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-flash-yellow font-bold text-sm mb-2">STEP 2</p>
+                <p className="text-gray-300 text-sm mb-1">Send proof of payment on WhatsApp to:</p>
+                <p className="text-white font-bold text-lg">08138497812</p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-flash-yellow font-bold text-sm mb-1">STEP 3</p>
+                <p className="text-gray-300 text-sm">All valid votes will be recorded and confirmed.</p>
+              </div>
+            </div>
+
+            {/* WhatsApp CTA */}
+            <a
+              href={`https://wa.me/2348138497812?text=${encodeURIComponent(`Hi! I want to vote for ${voteModal.name} in the Flash Lounge Model Competition. Here is my proof of payment.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-3 w-full py-3.5 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 active:scale-95"
+              style={{ backgroundColor: '#25D366' }}
+            >
+              <FaWhatsapp size={20} />
+              Send Proof on WhatsApp →
+            </a>
           </div>
         </div>
       )}

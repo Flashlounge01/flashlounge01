@@ -4,7 +4,7 @@ const { authenticateToken } = require('../middleware/auth');
 const { uploadSingle } = require('../middleware/upload');
 const {
   getActiveModels, initiateVote, handlePaymentWebhook, verifyPayment,
-  getAllModels, createModel, updateModel, deleteModel, getModelVotes, resetModelVotes,
+  getAllModels, createModel, updateModel, deleteModel, getModelVotes, resetModelVotes, setModelVotes,
 } = require('../controllers/modelsController');
 
 // Public
@@ -22,5 +22,6 @@ router.put('/:id', authenticateToken, uploadSingle('photo'), updateModel);
 router.delete('/:id', authenticateToken, deleteModel);
 router.get('/:id/votes', authenticateToken, getModelVotes);
 router.post('/:id/reset', authenticateToken, resetModelVotes);
+router.put('/:id/set-votes', authenticateToken, setModelVotes);
 
 module.exports = router;

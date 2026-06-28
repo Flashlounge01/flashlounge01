@@ -232,7 +232,27 @@ const resetModelVotes = async (req, res) => {
   }
 };
 
+const setModelVotes = async (req, res) => {
+  const { id } = req.params;
+  const { vote_count } = req.body;
+  const count = parseInt(vote_count, 10);
+  if (isNaN(count) || count < 0) {
+    return res.status(400).json({ error: 'vote_count must be a non-negative integer' });
+  }
+  try {
+    const result = await pool.query(
+      'UPDATE models SET vote_count=$1, updated_at=NOW() WHERE id=$2 RETURNING id, name, vote_count',
+      [count, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Model not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('setModelVotes error:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 module.exports = {
   getActiveModels, initiateVote, handlePaymentWebhook, verifyPayment,
-  getAllModels, createModel, updateModel, deleteModel, getModelVotes, resetModelVotes,
+  getAllModels, createModel, updateModel, deleteModel, getModelVotes, resetModelVotes, setModelVotes,
 };
